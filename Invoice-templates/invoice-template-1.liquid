@@ -1,0 +1,135 @@
+<style>
+
+  .separator {
+    margin-bottom: 30px;
+  }
+
+  .bigSeparator {
+    margin-bottom: 100px;
+  }
+  .bold {
+    font-weight: bold;
+  }
+
+  p {
+    margin: 1px 0 !important;
+  }
+
+
+
+  th,
+  tr,
+  td {
+    border: 1px solid black;
+    padding: 2px 4px;
+    text-align: center;
+  }
+</style>
+
+<div style="height:100% ; width: 100%; padding: 3%; ">
+
+  <header style="display: flex; justify-content: space-between" class="separator">
+    {%comment%}
+      Informations sur l'entreprise
+    {%endcomment%}
+    <div>
+      <p>Explore</p>
+      <p>1 boulevard saint-Honoré</p>
+      <p>75001 PARIS</p>
+    </div>
+
+    <div>
+      <p>Facture n°1333</p>
+      <p>01/02/2023</p>
+      <p class="bold">PAYÉE</p>
+    </div>
+
+  </header>
+
+
+  <div style="display:flex; justify-content: space-between" class="bigSeparator">
+    <div>
+      <h3>Adresse de facturation</h3>
+      <p>Jean Dupont</p>
+      <p>1 Place Kléber</p>
+      <p>67000 Strasbourg</p>
+    </div>
+
+    <div>
+      <h3>Adresse de livraison</h3>
+      <p>Brigitte Duportail</p>
+      <p>2 rue de la ville</p>
+      <p>67300 Schiltigheim</p>
+    </div>
+  </div>
+
+
+
+  {%comment%}
+    Détails de la commande
+  {%endcomment%}
+  <section>
+    <table class="separator" style="border-collapse: collapse; width: 100%; table-layout: fixed">
+      <thead>
+        <tr>
+          <th>Articles</th>
+          <th>Quantité</th>
+          <th>Prix unitaire HT</th>
+          <th>Sous-total HT</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr>
+          <td>
+            Pantalon Rando - 38
+          </td>
+          <td>
+            2
+          </td>
+          <td>
+            50€
+          </td>
+          <td>100€</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <table class="bigSeparator" style="border-collapse: collapse; width: 100%; table-layout: fixed">
+      <thead>
+        <th>Total HT</th>
+        <th>TVA 20%</th>
+        <th>Remise</th>
+        <th>Frais de livraison</th>
+        <th style="background-color: lightgray;">TOTAL TTC</th>
+      </thead>
+
+      <tbody>
+        <tr>
+          <td>115€</td>
+          <td>23€</td>
+          <td>50€</td>
+          <td>0€</td>
+          <td style="background-color: lightgray;">88,00 €</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+
+
+  {%comment%}
+    Infos complémentaires
+  {%endcomment%}
+  <footer style="background: lightgray; text-align: center">
+    <p style="margin-bottom: 10px;">Votre satisfaction est notre priorité. Pour toutes questions, merci de contacter contact@explore.fr</p>
+
+    <p>
+      <span>Numéro SIRET 123 456 789 01234 A RCS PARIS</span>
+      -
+      <span>Explore SAS au capital social de 50 000€</span>
+      -
+      <span>Numéro de TVA intracommunautaire: FR 12 345 678 901</span>
+    </p>
+  </footer>
+</div>
