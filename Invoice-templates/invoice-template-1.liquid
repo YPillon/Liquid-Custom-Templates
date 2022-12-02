@@ -27,7 +27,7 @@
 </style>
 
 
-<div style="height:100% ; width: 100%; padding: 3%; ">
+<div style="height:100% ; width: 90%; padding: 3%; ">
 
   <header style="display: flex; justify-content: space-between" class="separator">
     {%comment%}
@@ -51,15 +51,22 @@
   <div style="display:flex; justify-content: space-between" class="bigSeparator">
     <div>
       <h3>Adresse de facturation</h3>
-      <p>Jean Dupont</p>
-      <p>1 Place Kléber</p>
-      <p>67000 Strasbourg</p>
+      <p>{{ billing_address.name }}</p>
+      <p>{{ billing_address.address1 }}</p>
+      {% if billing_address.address2 %}
+        <p>{{ billing_address.address2 }}</p>
+      {% endif %}
+      <p>{{ billing_address.zip }} {{ billing_address.city }}</p>
     </div>
 
     <div>
       <h3>Adresse de livraison</h3>
       <p>{{ shipping_address.name }}</p>
-      <p>{{ shipping_address }}</p>
+      <p>{{ shipping_address.address1 }}</p>
+      {% if shipping_address.address2 %}
+        <p>{{ shipping_address.address2 }}</p>
+      {% endif %}
+      <p>{{ shipping_address.zip }} {{ shipping_address.city }}</p>
     </div>
   </div>
 
@@ -102,23 +109,40 @@
     </table>
 
     <table style="border-collapse: collapse; width: 100%; table-layout: fixed">
-      <thead>
-        <th>Total HT</th>
-        <th>TVA 20%</th>
-        <th>Remise</th>
-        <th>Frais de livraison</th>
-        <th style="background-color: lightgray;">TOTAL TTC</th>
-      </thead>
-
-      <tbody>
+      <tr>
+        <td>Total HT</td>
+        <td>{{ subtotal_price | minus: tax_price | money }}</td>
+      </tr>
+      <tr>
+        <td>TVA 20%</td>
+        <td>{{ tax_price | money }}</td>
+      </tr>
+      <tr>
+        <td>Frais de livraison</td>
+        <td>{{ shipping_method.price | money }}</td>
+      </tr>
+      {% if discounts.size > 0 %}
+        {% for discount in discounts %}
+          <tr>
+            <td>Remise : {{ discount.code }}</td>
+            <td>{{ discount.savings | money }}</td>
+          </tr>
+        {% endfor %}
+      {% else %}
         <tr>
-          <td>{{ subtotal_price | minus: tax_price | money }}</td>
-          <td>{{ tax_price | money }}</td>
-          <td>50€</td>
-          <td></td>
-          <td style="background-color: lightgray;">{{ total_price | money }}</td>
+          <td>Remise</td>
+          <td>€0,00</td>
         </tr>
-      </tbody>
+      {% endif %}
+
+      <tr>
+        <td>
+          <b>TOTAL TTC</b>
+        </td>
+        <td>
+          <b>{{ total_price | money }}</b>
+        </td>
+      </tr>
     </table>
   </section>
 
@@ -127,15 +151,11 @@
   {%comment%}
     Infos complémentaires
   {%endcomment%}
-  <footer style="background: lightgray; text-align: center">
-    <p style="margin-bottom: 10px;">Votre satisfaction est notre priorité. Pour toutes questions, merci de contacter contact@explore.fr</p>
+  <footer style="text-align: center">
+    <p class="separator">Votre satisfaction est notre priorité. Pour toutes questions, merci de contacter {{ shop.email }}</p>
 
     <p>
-      <span>Numéro SIRET 123 456 789 01234 A RCS PARIS</span>
-      -
-      <span>Explore SAS au capital social de 50 000€</span>
-      -
-      <span>Numéro de TVA intracommunautaire: FR 12 345 678 901</span>
+      <span>{{ shop.address2 }}</span>
     </p>
   </footer>
 </div>
