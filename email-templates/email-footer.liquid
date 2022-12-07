@@ -1,0 +1,39 @@
+<table class="row footer">
+  <tr>
+    <td class="footer__cell">
+      <center>
+        <table class="container" style="text-align:center">
+          <tr>
+            <td class="footerText">
+              {{shop.name}}
+            </td>
+          </tr>
+          <tr>
+            <td class="footerText">
+              {{shop.address.address1}}
+            </td>
+          </tr>
+          <tr>
+            <td class="footerText">
+              {{shop.address.zip}}&nbsp;{{shop.address.city}}
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <p style="margin-top: 20px" class="disclaimer__subtext">Ce message a été envoyé automatiquement. Merci de ne pas y répondre.
+              </p>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <p style="margin-top: 20px" class="disclaimer__subtext">Si vous avez des questions, veuillez nous contacter à
+                <a href="mailto:{{ shop.email }}">{{ shop.email }}</a>
+              </p>
+            </td>
+          </tr>
+
+        </table>
+      </center>
+    </td>
+  </tr>
+</table>
