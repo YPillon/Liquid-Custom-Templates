@@ -1,3 +1,194 @@
+{% comment %}
+ATTENTION : CE TEMPLATE EST CONFIGURÉ POUR UNE TVA DE 20%
+{% endcomment %}
+
+
+
+{% assign currency = order.currency %}
+
+{% comment %} 
+Calcul du total des articles hors taxes
+{% endcomment %}{% assign total_articles_ht = 0 %}
+{% for item in order.line_items %}
+  {% assign total_item_ttc_price = item.price | times: item.quantity %}
+  {% assign total_item_ht_price = total_item_ttc_price | divided_by: 1.2 %}
+  {% assign total_articles_ht = total_articles_ht | plus: total_item_ht_price %}
+{% endfor %}
+
+{% comment %}
+Calcul du montant total des discounts pour les additionner à total_price et avoir le total TTC avant remise
+{% endcomment %}
+{% assign total_discount = 0 %}
+{% if order.discount_codes.size > 0 %}
+  {% for discount in order.discount_codes %}
+    {% assign total_discount = total_discount | plus: discount.amount %}
+  {% endfor %}
+{% endif %}
+
+{% comment %}
+Calcul Frais de livraison HT
+{% endcomment %}
+{% assign delivery_tax = order.shipping_lines.[0].tax_lines.[0].price %}
+{% assign delivery_price_ht = order.shipping_lines.[0].price | minus: delivery_tax %}
+
+{% comment %}
+Calcul de la TVA
+Total TVA = (Total HT + LivraisonHT) * 0.2
+{% endcomment %}{% assign total_ht = total_articles_ht | plus: delivery_price_ht %}
+{% assign tva_price = total_ht | times: 0.2 %}
+
+<div style="display: flex; justify-content: center">
+  <div style="height:100% ; width: 90%; padding: 3%; ">
+
+    <header style="display: flex; justify-content: space-between" class="separator">
+      {% comment %}
+      Informations sur l'entreprise
+      {% endcomment %}
+      <div>
+        <div class="logo-left mrt-0">
+          {% unless configuration.logo == blank %}
+            <a class="logo" href="{{ shop.url }}">
+              <img
+                style="width: 200px; margin-bottom: 50px;"
+                src="{{ configuration.logo | asset_url }}"
+                alt="Main Website Store"
+                border="0" />
+            </a>
+          {% endunless %}
+        </div>
+        <strong>{{ configuration.name }}</strong>
+        <p>{{ configuration.address }}</p>
+      </div>
+
+      <div>
+        <p class="bold">Facture {{ order.name }}</p>
+        <p>{{ "now" | date: "D/M/Y" }}</p>
+        <p class="bold">PAYÉE</p>
+      </div>
+
+    </header>
+
+
+    <div style="display:flex; justify-content: space-between" class="bigSeparator">
+      <div>
+        <h3>Adresse de facturation</h3>
+        <p>{{ order.billing_address.name }}</p>
+        <p>{{ order.billing_address.address1 }}</p>
+        {% if order.billing_address.address2 %}
+          <p>{{ order.billing_address.address2 }}</p>
+        {% endif %}
+        <p>{{ order.billing_address.zip }} {{ order.billing_address.city }}</p>
+      </div>
+
+      <div>
+        <h3>Adresse de livraison</h3>
+        <p>{{ order.shipping_address.name }}</p>
+        <p>{{ order.shipping_address.address1 }}</p>
+        {% if order.shipping_address.address2 %}
+          <p>{{ order.shipping_address.address2 }}</p>
+        {% endif %}
+        <p>{{ order.shipping_address.zip }} {{ order.shipping_address.city }}</p>
+      </div>
+    </div>
+
+
+
+    {% comment %}
+    Détails de la commande
+    {% endcomment %}
+    <section class="bigSeparator">
+      <table class="separator" style="border-collapse: collapse; width: 100%; table-layout: fixed">
+        <thead>
+          <tr>
+            <th>Articles</th>
+            <th>Quantité</th>
+            <th>Prix unitaire HT</th>
+            <th>Sous-total HT</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {% comment %}
+          Pour chaque article, créé une ligne dans le tableau
+          {% endcomment %}
+          {% for line_item in order.line_items %}
+            <tr>
+              <td>{{ line_item.title }}</td>
+              <td>{{ line_item.quantity }}</td>
+              <td>
+                {{ line_item.price | divided_by: 1.2 | money: currency }}
+              </td>
+              <td>
+                {{ line_item.price | divided_by: 1.2 | times: line_item.quantity | money: currency }}
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+
+
+      <table style="border-collapse: collapse; width: 100%; table-layout: fixed">
+        <tr>
+          <td>Total articles HT</td>
+          <td>{{ total_articles_ht | money: currency }}</td>
+        </tr>
+        <tr>
+          <td>Frais de livraison HT</td>
+          <td>{{ delivery_price_ht | money: currency }}</td>
+        </tr>
+        <tr>
+          <td>TVA 20%</td>
+          <td>{{ tva_price | money: currency }}</td>
+        </tr>
+        <tr>
+          <td>Sous-total TTC</td>
+          <td>{{ order.total_price | plus: total_discount | money: currency }}</td>
+        </tr>
+        {% if order.discount_codes.size > 0 %}
+          {% for discount in order.discount_codes %}
+            <tr>
+              <td>Remise : {{ discount.code }}</td>
+              <td>{{ discount.amount | money: currency }}</td>
+            </tr>
+          {% endfor %}
+        {% else %}
+          <tr>
+            <td>Remise</td>
+            <td>0,00 €</td>
+          </tr>
+        {% endif %}
+
+        <tr>
+          <td>
+            <b>TOTAL TTC</b>
+          </td>
+          <td>
+            <b>{{ order.total_price | money: currency }}</b>
+          </td>
+        </tr>
+      </table>
+    </section>
+
+
+
+    {% comment %}
+    Infos complémentaires
+    {% endcomment %}
+    <footer style="text-align: center">
+      <p class="separator">Votre satisfaction est notre priorité. Pour toutes questions, merci de contacter {{ configuration.email }}</p>
+
+      <p>
+        <span>{{ configuration.vat_number }}</span>
+      </p>
+      <p style="transform: translateY(50px);">
+        <strong>Merci pour votre confiance&nbsp;!</strong>
+      </p>
+    </footer>
+  </div>
+</div>
+
+
 <style>
 
   .separator {
@@ -25,154 +216,3 @@
     text-align: center;
   }
 </style>
-
-
-{% assign currency = order.currency %}
-
-  <div style="height:100% ; width: 90%; padding: 3%; ">
-
-  <header style="display: flex; justify-content: space-between" class="separator">
-    {% comment %}
-    Informations sur l'entreprise
-    {% endcomment %}
-    <div>
-      <div class="logo-left mrt-0">
-        {% unless configuration.logo == blank %}
-          <a class="logo" href="{{ shop.url }}">
-            <img
-              style="max-width: {{ logoWidth }}px; width: {{ logoSize }}%;"
-              src="{{ configuration.logo | asset_url }}"
-              alt="Main Website Store"
-              border="0" />
-          </a>
-        {% endunless %}
-      </div>
-      <p>{{ configuration.address }}</p>
-    </div>
-
-    <div>
-      <p class="bold">Facture {{ order_name }}</p>
-      <p>{{ "now" | date: "%d/%m/%Y" }}</p>
-      <p class="bold">PAYÉE</p>
-    </div>
-
-  </header>
-
-
-  <div style="display:flex; justify-content: space-between" class="bigSeparator">
-    <div>
-      <h3>Adresse de facturation</h3>
-      <p>{{ order.billing_address.name }}</p>
-      <p>{{ order.billing_address.address1 }}</p>
-      {% if order.billing_address.address2 %}
-        <p>{{ order.billing_address.address2 }}</p>
-      {% endif %}
-      <p>{{ order.billing_address.zip }} {{ order.billing_address.city }}</p>
-    </div>
-
-    <div>
-      <h3>Adresse de livraison</h3>
-      <p>{{ order.shipping_address.name }}</p>
-      <p>{{ order.shipping_address.address1 }}</p>
-      {% if order.shipping_address.address2 %}
-        <p>{{ order.shipping_address.address2 }}</p>
-      {% endif %}
-      <p>{{ order.shipping_address.zip }} {{ order.shipping_address.city }}</p>
-    </div>
-  </div>
-
-
-
-  {% comment %}
-  Détails de la commande
-  {% endcomment %}<section class="bigSeparator">
-    <table class="separator" style="border-collapse: collapse; width: 100%; table-layout: fixed">
-      <thead>
-        <tr>
-          <th>Articles</th>
-          <th>Quantité</th>
-          <th>Prix unitaire HT</th>
-          <th>Sous-total HT</th>
-        </tr>
-      </thead>
-
-      <tbody>
-        {% comment %}
-        Pour chaque article, créé une ligne dans le tableau
-        {% endcomment %}
-        {% for line_item in order.line_items %}
-          {% comment %} 
-          Test des différents objets ici
-          {% endcomment %}
-          <tr>
-            <td>{{ line_item.automatic_price }} + {{ line_item.price }}</td>
-          </tr>
-          <tr>
-            <td>{{ line_item.title }}</td>
-            <td>{{ line_item.quantity }}</td>
-            <td>
-              {% comment %}
-              Ici je calcule unit_price - (tax_line.price / line_item.quantity)
-              {% endcomment %}
-              {{ line_item.automatic_price | minus: line_item.tax_lines[0].price | money }}
-            </td>
-            <td>
-              {{ line_item.price | minus: line_item.tax_lines[0].price | times: line_item.quantity | money: currency }}
-            </td>
-          </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-
-    <table style="border-collapse: collapse; width: 100%; table-layout: fixed">
-      <tr>
-        {% comment %} EN CHANTIER {% endcomment %}
-        <h1 style="color: red">TEST {{ order.shipping_lines.tax_lines }}</h1>
-        <td>Total HT</td>
-        <td>{{ subtotal_price | minus: tax_price | money }}</td>
-      </tr>
-      <tr>
-        <td>TVA 20%</td>
-        <td>{{ tax_price | money }}</td>
-      </tr>
-      <tr>
-        <td>Frais de livraison</td>
-        <td>{{ shipping_method.price | money }}</td>
-      </tr>
-      {% if discounts.size > 0 %}
-        {% for discount in discounts %}
-          <tr>
-            <td>Remise : {{ discount.code }}</td>
-            <td>{{ discount.savings | money }}</td>
-          </tr>
-        {% endfor %}
-      {% else %}
-        <tr>
-          <td>Remise</td>
-          <td>€0,00</td>
-        </tr>
-      {% endif %}
-
-      <tr>
-        <td>
-          <b>TOTAL TTC</b>
-        </td>
-        <td>
-          <b>{{ total_price | money }}</b>
-        </td>
-      </tr>
-    </table>
-  </section>
-
-
-
-  {% comment %}
-  Infos complémentaires
-  {% endcomment %}<footer style="text-align: center">
-    <p class="separator">Votre satisfaction est notre priorité. Pour toutes questions, merci de contacter {{ shop.email }}</p>
-
-    <p>
-      <span>{{ shop.address2 }}</span>
-    </p>
-  </footer>
-</div>
