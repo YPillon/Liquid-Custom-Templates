@@ -1,0 +1,19 @@
+<!-- Ces règles de style sont destinées à être ajoutées à chaque template d'email transactionnel sur Shopify -->
+
+{% assign main_text_color = #2552525 %}
+
+<style>
+  .footerText {
+    font-size: 0.8rem;
+    color: {{ main_text_color }}
+    ;
+    margin: 5px 0;
+  }
+
+  .button__cell {
+    background: {{ shop.email_accent_color }}
+    ;
+    border-radius: 0;
+
+  }
+</style>
