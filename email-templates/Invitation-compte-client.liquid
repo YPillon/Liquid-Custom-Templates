@@ -1,0 +1,195 @@
+{% capture email_title %}Activez votre compte maintenant{% endcapture %}
+{% capture email_body %}Bonjour {{ customer.first_name }}, merci d'avoir créé un nouveau compte client sur
+<a href="{{shop.url}}">{{ shop.name }}</a>. Maintenant, il ne vous reste plus qu’à l’activer&nbsp;!{% endcapture %}
+
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <title>{{ email_title }}</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width">
+  <link rel="stylesheet" type="text/css" href="/assets/notifications/styles.css">
+  <style>
+    .button__cell {
+      background: {
+          {
+          shop.email_accent_color
+        }
+      }
+
+      ;
+    }
+
+    a,
+    a:hover,
+    a:active,
+    a:visited {
+      color: {
+          {
+          shop.email_accent_color
+        }
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <table class="body">
+    <tr>
+      <td>
+        <table class="header row">
+          <tr>
+            <td class="header__cell">
+              <center>
+
+                <table class="container">
+                  <tr>
+                    <td>
+
+                      <table class="row">
+                        <tr>
+                          <td class="shop-name__cell">
+                            {%- if shop.email_logo_url %}
+                            <img src="{{shop.email_logo_url}}" alt="{{ shop.name }}"
+                              width="{{ shop.email_logo_width }}">
+                            {%- else %}
+                            <h1 class="shop-name__text">
+                              <a href="{{shop.url}}">{{ shop.name }}</a>
+                            </h1>
+                            {%- endif %}
+                          </td>
+
+                        </tr>
+                      </table>
+
+                    </td>
+                  </tr>
+                </table>
+
+              </center>
+            </td>
+          </tr>
+        </table>
+
+
+
+        <table class="row content">
+          <tr>
+            <td class="content__cell">
+              <center>
+                <table class="container">
+                  <tr>
+                    <td>
+
+                      <h2>{{ email_title }}</h2>
+                      {% if custom_message != blank %}
+                      <p>{{ custom_message }}</p>
+                      {% else %}
+                      <p>{{ email_body }}</p>
+                      {% endif %}
+                      <table class="row actions">
+                        <tr>
+                          <td class="empty-line">&nbsp;</td>
+                        </tr>
+                        <tr>
+                          <td class="actions__cell">
+                            <table class="button main-action-cell">
+                              <tr>
+                                <td class="button__cell">
+                                  <a href="{{ customer.account_activation_url }}" class="button__text">Activer mon
+                                    compte</a>
+                                </td>
+                              </tr>
+                            </table>
+                          </td>
+                        </tr>
+                      </table>
+
+
+                    </td>
+                  </tr>
+                </table>
+              </center>
+            </td>
+          </tr>
+        </table>
+        <table class="row footer">
+          <tr>
+            <td class="footer__cell">
+              <center>
+                <table class="container disclaimer__subtext" style="text-align:center">
+                  <tr>
+                    <td>
+                      <p style="margin-bottom: 20px" class="footerText">Si vous avez la moindre question, répondez
+                        simplement à ce mail ou contactez-nous via la messagerie disponible sur notre boutique. Nous
+                        serons heureux de pouvoir vous aider&nbsp;!
+                      </p>
+                    </td>
+                  </tr>
+
+                  <div class="disclaimer__subtext">
+                    <tr>
+                      <td class="footerText">
+                        {{ shop.name }}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="footerText">
+                        {{ shop.address.address1 }}&nbsp;{{ shop.address.zip }}&nbsp;{{ shop.address.city }}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="footerText">
+                        {{ shop.secure_url }}
+                      </td>
+                    </tr>
+                  </div>
+
+
+
+                </table>
+              </center>
+            </td>
+          </tr>
+        </table>
+
+        <img src="{{ 'notifications/spacer.png' | shopify_asset_url }}" class="spacer" height="1" alt="" />
+
+      </td>
+    </tr>
+  </table>
+
+  <!-- Ces règles de style sont destinées à être ajoutées à chaque template d'email transactionnel sur Shopify -->
+
+  {% assign main_text_color = "#252525" %}
+
+  <style>
+    .footerText {
+      font-size: 0.8rem;
+
+      color: {
+          {
+          main_text_color
+        }
+      }
+
+      ;
+      margin: 5px 0;
+    }
+
+    .button__cell {
+      background: {
+          {
+          shop.email_accent_color
+        }
+      }
+
+      ;
+      border-radius: 0;
+
+    }
+  </style>
+</body>
+
+</html>

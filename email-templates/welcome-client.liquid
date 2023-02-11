@@ -1,0 +1,218 @@
+{% comment %}
+Objet de l'email : Bienvenue dans la famille {{shop.name}} !
+{% endcomment %}
+
+{% capture email_title %}Bienvenue chez {{ shop.name }} !{% endcapture %}
+{% capture email_body %}
+
+<p>Bonjour {{customer.first_name}},</p>
+
+<p>Je suis John Doe, fondateur de {{shop.name}}.</p>
+
+<p>Je tenais à vous remercier du fond du coeur. C'est un honneur de vous compter parmi les membres de la famille
+  {{shop.name}}.</p>
+
+<p>C'est grâce à vous, qui avez accordé votre confiance à notre marque, que nous grandissons chaque jour pour participer
+  à
+  la création d'un monde meilleur.</p>
+
+<p>Pour vous remercier, j'ai le plaisir de vous offrir gratuitement le Guide Raffiné des Bijoux Bohèmes.</p>
+
+<p>En 10 pages, vous découvrirez une synthèse de 10 ans d'expertise en haute bijouterie mêlé au savoir-faire hors norme
+  de
+  notre styliste Marie Bougrabin, pour vous permettre en toute simplicité d'accorder vos tenues à nos créations et faire
+  de vous l'étoile la plus rayonnante.</p>
+
+<p>En attendant, continuez de briller</p>
+
+<br>
+<br>
+
+<p>
+  Amicalement, <br>
+  John
+</p>
+
+
+
+{% endcapture %}
+
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <title>{{ email_title }}</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width">
+  <link rel="stylesheet" type="text/css" href="/assets/notifications/styles.css">
+</head>
+
+<body>
+  <table class="body">
+    <tr>
+      <td>
+        <table class="header row">
+          <tr>
+            <td class="header__cell">
+              <center>
+
+                <table class="container">
+                  <tr>
+                    <td>
+
+                      <table class="row">
+                        <tr>
+                          <td class="shop-name__cell">
+                            {%- if shop.email_logo_url %}
+                            {% comment %} <img src="{{shop.email_logo_url}}" alt="{{ shop.name }}"
+                              width="{{ shop.email_logo_width }}"> {% endcomment %}
+
+                            <img src="{{ shop.email_logo_url }}" alt="{{ shop.name }}"
+                              width="{{ shop.email_logo_width }}" loading="lazy" height="">
+                            {%- else %}
+                            <h1 class="shop-name__text">
+                              <a href="{{shop.url}}">{{ shop.name }}</a>
+                            </h1>
+                            {%- endif %}
+                          </td>
+
+                        </tr>
+                      </table>
+
+                    </td>
+                  </tr>
+                </table>
+
+              </center>
+            </td>
+          </tr>
+        </table>
+
+        <table class="row content">
+          <tr>
+            <td class="content__cell">
+              <center>
+                <table class="container">
+                  <tr>
+                    <td>
+
+                      <h2>{{ email_title }}</h2>
+                      <p>{{ email_body }}</p>
+
+                      <img src="{{ 'notifications/spacer.png' | shopify_asset_url }}" class="spacer" height="1" alt=""
+                        loading="lazy" width="" />
+
+                      <center>
+                        <div class="button">
+                          <a href="https://google.com">Obtenir le guide maintenant</a>
+                        </div>
+                      </center>
+
+
+                      {% comment %}
+                      {% if shop.url %}
+                      <table class="row actions">
+                        <tr>
+                          <td class="actions__cell">
+                            <table class="button main-action-cell">
+                              <tr>
+                                <td class="button__cell"><a href="{{ shop.url }}" class="button__text">Visitez notre
+                                    boutique</a></td>
+                              </tr>
+                            </table>
+                          </td>
+                        </tr>
+                      </table>
+                      {% endif %}
+                      {% endcomment %}
+
+
+                    </td>
+                  </tr>
+                </table>
+              </center>
+            </td>
+          </tr>
+        </table>
+
+        <table class="row footer">
+          <tr>
+            <td class="footer__cell">
+              <center>
+                <table class="container disclaimer__subtext" style="text-align:center">
+                  <tr>
+                    <td>
+                      <p style="margin-bottom: 20px" class="footerText">Si vous avez la moindre question, répondez
+                        simplement à ce mail ou contactez-nous via la messagerie disponible sur notre boutique. Nous
+                        serons heureux de pouvoir vous aider&nbsp;!
+                      </p>
+                    </td>
+                  </tr>
+
+                  <div class="disclaimer__subtext">
+                    <tr>
+                      <td class="footerText">
+                        {{ shop.name }}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="footerText">
+                        {{ shop.address.address1 }}&nbsp;{{ shop.address.zip }}&nbsp;{{ shop.address.city }}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="footerText">
+                        {{ shop.secure_url }}
+                      </td>
+                    </tr>
+                  </div>
+
+
+
+                </table>
+              </center>
+            </td>
+          </tr>
+        </table>
+
+        <img src="{{ 'notifications/spacer.png' | shopify_asset_url }}" class="spacer" height="1" alt="" loading="lazy"
+          width="" />
+
+      </td>
+    </tr>
+  </table>
+
+  </td>
+  </tr>
+  </table>
+
+  <!-- Ces règles de style sont destinées à être ajoutées à chaque template d'email transactionnel sur Shopify -->
+  <style>
+    .footerText {
+      font-size: 0.8rem;
+      margin: 5px 0;
+    }
+
+    .button__cell {
+      border-radius: 0;
+    }
+
+    .button {
+      width: fit-content;
+      padding: 15px 20px;
+      color: white;
+
+      background-color: {
+          {
+          shop.email_accent_color
+        }
+      }
+
+      ;
+    }
+
+    }
+  </style>
+</body>
+
+</html>

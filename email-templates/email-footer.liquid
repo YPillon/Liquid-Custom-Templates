@@ -2,35 +2,34 @@
   <tr>
     <td class="footer__cell">
       <center>
-        <table class="container" style="text-align:center">
-          <tr>
-            <td class="footerText">
-              {{shop.name}}
-            </td>
-          </tr>
-          <tr>
-            <td class="footerText">
-              {{shop.address.address1}}
-            </td>
-          </tr>
-          <tr>
-            <td class="footerText">
-              {{shop.address.zip}}&nbsp;{{shop.address.city}}
-            </td>
-          </tr>
+        <table class="container disclaimer__subtext" style="text-align:center">
           <tr>
             <td>
-              <p style="margin-top: 20px" class="disclaimer__subtext">Ce message a été envoyé automatiquement. Merci de ne pas y répondre.
+              <p style="margin-bottom: 20px" class="footerText disclaimer__subtext">Si vous avez la moindre question,
+                répondez simplement
+                à ce mail ou contactez-nous via la messagerie disponible sur notre boutique. Nous serons heureux de
+                pouvoir vous aider&nbsp;!
               </p>
             </td>
           </tr>
-          <tr>
-            <td>
-              <p style="margin-top: 20px" class="disclaimer__subtext">Si vous avez des questions, veuillez nous contacter à
-                <a href="mailto:{{ shop.email }}">{{ shop.email }}</a>
-              </p>
-            </td>
-          </tr>
+
+          <div class="disclaimer__subtext">
+            <tr>
+              <td class="footerText">
+                {{ shop.name }}
+              </td>
+            </tr>
+            <tr>
+              <td class="footerText">
+                {{ shop.address.address1 }}&nbsp;{{ shop.address.zip }}&nbsp;{{ shop.address.city }}
+              </td>
+            </tr>
+            <tr>
+              <td class="footerText">
+                {{ shop.secure_url }}
+              </td>
+            </tr>
+          </div>
 
         </table>
       </center>
