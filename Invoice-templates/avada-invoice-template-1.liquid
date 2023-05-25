@@ -1,4 +1,10 @@
 {% comment %}
+Ce template a été écrit pour fonctionner avec l'app Shopify "Avada: Invoice Order Printer" et est compatible avec la
+version en vigueur au 25 mai 2023.
+
+En implémentant ce template dans l'app, vous pourrez automatiquement émettre des factures conforme à la réglementation
+française au 25 mai 2023.
+
 ATTENTION : CE TEMPLATE EST CONFIGURÉ POUR UNE TVA DE 20%
 {% endcomment %}
 
@@ -6,13 +12,13 @@ ATTENTION : CE TEMPLATE EST CONFIGURÉ POUR UNE TVA DE 20%
 
 {% assign currency = order.currency %}
 
-{% comment %} 
+{% comment %}
 Calcul du total des articles hors taxes
 {% endcomment %}{% assign total_articles_ht = 0 %}
 {% for item in order.line_items %}
-  {% assign total_item_ttc_price = item.price | times: item.quantity %}
-  {% assign total_item_ht_price = total_item_ttc_price | divided_by: 1.2 %}
-  {% assign total_articles_ht = total_articles_ht | plus: total_item_ht_price %}
+{% assign total_item_ttc_price = item.price | times: item.quantity %}
+{% assign total_item_ht_price = total_item_ttc_price | divided_by: 1.2 %}
+{% assign total_articles_ht = total_articles_ht | plus: total_item_ht_price %}
 {% endfor %}
 
 {% comment %}
@@ -20,9 +26,9 @@ Calcul du montant total des discounts pour les additionner à total_price et avo
 {% endcomment %}
 {% assign total_discount = 0 %}
 {% if order.discount_codes.size > 0 %}
-  {% for discount in order.discount_codes %}
-    {% assign total_discount = total_discount | plus: discount.amount %}
-  {% endfor %}
+{% for discount in order.discount_codes %}
+{% assign total_discount = total_discount | plus: discount.amount %}
+{% endfor %}
 {% endif %}
 
 {% comment %}
@@ -47,13 +53,10 @@ Total TVA = (Total HT + LivraisonHT) * 0.2
       <div>
         <div class="logo-left mrt-0">
           {% unless configuration.logo == blank %}
-            <a class="logo" href="{{ shop.url }}">
-              <img
-                style="width: 200px; margin-bottom: 50px;"
-                src="{{ configuration.logo | asset_url }}"
-                alt="Main Website Store"
-                border="0" />
-            </a>
+          <a class="logo" href="{{ shop.url }}">
+            <img style="width: 200px; margin-bottom: 50px;" src="{{ configuration.logo | asset_url }}"
+              alt="Main Website Store" border="0" />
+          </a>
           {% endunless %}
         </div>
         <strong>{{ configuration.name }}</strong>
@@ -75,7 +78,7 @@ Total TVA = (Total HT + LivraisonHT) * 0.2
         <p>{{ order.billing_address.name }}</p>
         <p>{{ order.billing_address.address1 }}</p>
         {% if order.billing_address.address2 %}
-          <p>{{ order.billing_address.address2 }}</p>
+        <p>{{ order.billing_address.address2 }}</p>
         {% endif %}
         <p>{{ order.billing_address.zip }} {{ order.billing_address.city }}</p>
       </div>
@@ -85,7 +88,7 @@ Total TVA = (Total HT + LivraisonHT) * 0.2
         <p>{{ order.shipping_address.name }}</p>
         <p>{{ order.shipping_address.address1 }}</p>
         {% if order.shipping_address.address2 %}
-          <p>{{ order.shipping_address.address2 }}</p>
+        <p>{{ order.shipping_address.address2 }}</p>
         {% endif %}
         <p>{{ order.shipping_address.zip }} {{ order.shipping_address.city }}</p>
       </div>
@@ -112,16 +115,16 @@ Total TVA = (Total HT + LivraisonHT) * 0.2
           Pour chaque article, créé une ligne dans le tableau
           {% endcomment %}
           {% for line_item in order.line_items %}
-            <tr>
-              <td>{{ line_item.title }}</td>
-              <td>{{ line_item.quantity }}</td>
-              <td>
-                {{ line_item.price | divided_by: 1.2 | money: currency }}
-              </td>
-              <td>
-                {{ line_item.price | divided_by: 1.2 | times: line_item.quantity | money: currency }}
-              </td>
-            </tr>
+          <tr>
+            <td>{{ line_item.title }}</td>
+            <td>{{ line_item.quantity }}</td>
+            <td>
+              {{ line_item.price | divided_by: 1.2 | money: currency }}
+            </td>
+            <td>
+              {{ line_item.price | divided_by: 1.2 | times: line_item.quantity | money: currency }}
+            </td>
+          </tr>
           {% endfor %}
         </tbody>
       </table>
@@ -146,17 +149,17 @@ Total TVA = (Total HT + LivraisonHT) * 0.2
           <td>{{ order.total_price | plus: total_discount | money: currency }}</td>
         </tr>
         {% if order.discount_codes.size > 0 %}
-          {% for discount in order.discount_codes %}
-            <tr>
-              <td>Remise : {{ discount.code }}</td>
-              <td>{{ discount.amount | money: currency }}</td>
-            </tr>
-          {% endfor %}
+        {% for discount in order.discount_codes %}
+        <tr>
+          <td>Remise : {{ discount.code }}</td>
+          <td>{{ discount.amount | money: currency }}</td>
+        </tr>
+        {% endfor %}
         {% else %}
-          <tr>
-            <td>Remise</td>
-            <td>0,00 €</td>
-          </tr>
+        <tr>
+          <td>Remise</td>
+          <td>0,00 €</td>
+        </tr>
         {% endif %}
 
         <tr>
@@ -176,7 +179,8 @@ Total TVA = (Total HT + LivraisonHT) * 0.2
     Infos complémentaires
     {% endcomment %}
     <footer style="text-align: center">
-      <p class="separator">Votre satisfaction est notre priorité. Pour toutes questions, merci de contacter {{ configuration.email }}</p>
+      <p class="separator">Votre satisfaction est notre priorité. Pour toutes questions, merci de contacter {{
+        configuration.email }}</p>
 
       <p>
         <span>{{ configuration.vat_number }}</span>
@@ -190,7 +194,6 @@ Total TVA = (Total HT + LivraisonHT) * 0.2
 
 
 <style>
-
   .separator {
     margin-bottom: 30px;
   }
@@ -198,6 +201,7 @@ Total TVA = (Total HT + LivraisonHT) * 0.2
   .bigSeparator {
     margin-bottom: 100px;
   }
+
   .bold {
     font-weight: bold;
   }

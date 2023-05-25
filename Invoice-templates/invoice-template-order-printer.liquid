@@ -1,5 +1,10 @@
-<style>
+{% comment %}
+Voici un template de facturation à utiliser avec l'app "Order Printer" de Shopify.
 
+Il n'est pas aussi élaboré aue celui fonctionnant avec l'app d'Avada et peut contenir des erreurs. À vérifier.
+{% endcomment %}
+
+<style>
   .separator {
     margin-bottom: 30px;
   }
@@ -7,6 +12,7 @@
   .bigSeparator {
     margin-bottom: 100px;
   }
+
   .bold {
     font-weight: bold;
   }
@@ -31,7 +37,7 @@
 
   <header style="display: flex; justify-content: space-between" class="separator">
     {%comment%}
-      Informations sur l'entreprise
+    Informations sur l'entreprise
     {%endcomment%}
     <div>
       <p>{{ shop_name }}</p>
@@ -54,7 +60,7 @@
       <p>{{ billing_address.name }}</p>
       <p>{{ billing_address.address1 }}</p>
       {% if billing_address.address2 %}
-        <p>{{ billing_address.address2 }}</p>
+      <p>{{ billing_address.address2 }}</p>
       {% endif %}
       <p>{{ billing_address.zip }} {{ billing_address.city }}</p>
     </div>
@@ -64,7 +70,7 @@
       <p>{{ shipping_address.name }}</p>
       <p>{{ shipping_address.address1 }}</p>
       {% if shipping_address.address2 %}
-        <p>{{ shipping_address.address2 }}</p>
+      <p>{{ shipping_address.address2 }}</p>
       {% endif %}
       <p>{{ shipping_address.zip }} {{ shipping_address.city }}</p>
     </div>
@@ -73,7 +79,7 @@
 
 
   {%comment%}
-    Détails de la commande
+  Détails de la commande
   {%endcomment%}
   <section class="bigSeparator">
     <table class="separator" style="border-collapse: collapse; width: 100%; table-layout: fixed">
@@ -88,22 +94,22 @@
 
       <tbody>
         {% comment %}
-          Pour chaque article, créé une ligne dans le tableau
+        Pour chaque article, créé une ligne dans le tableau
         {% endcomment %}
         {% for line_item in line_items %}
-          <tr>
-            <td>{{ line_item.title }}</td>
-            <td>{{ line_item.quantity }}</td>
-            <td>
-              {%comment%}
-                Ici je calcule unit_price - (tax_line.price / line_item.quantity)
-              {%endcomment%}
-              {{ line_item.price | minus: line_item.tax_lines[0].price | money}}
-            </td>
-            <td>
-              {{ line_item.price | minus: line_item.tax_lines[0].price | times: line_item.quantity | money }}
-            </td>
-          </tr>
+        <tr>
+          <td>{{ line_item.title }}</td>
+          <td>{{ line_item.quantity }}</td>
+          <td>
+            {%comment%}
+            Ici je calcule unit_price - (tax_line.price / line_item.quantity)
+            {%endcomment%}
+            {{ line_item.price | minus: line_item.tax_lines[0].price | money}}
+          </td>
+          <td>
+            {{ line_item.price | minus: line_item.tax_lines[0].price | times: line_item.quantity | money }}
+          </td>
+        </tr>
         {% endfor %}
       </tbody>
     </table>
@@ -122,17 +128,17 @@
         <td>{{ shipping_method.price | money }}</td>
       </tr>
       {% if discounts.size > 0 %}
-        {% for discount in discounts %}
-          <tr>
-            <td>Remise : {{ discount.code }}</td>
-            <td>{{ discount.savings | money }}</td>
-          </tr>
-        {% endfor %}
+      {% for discount in discounts %}
+      <tr>
+        <td>Remise : {{ discount.code }}</td>
+        <td>{{ discount.savings | money }}</td>
+      </tr>
+      {% endfor %}
       {% else %}
-        <tr>
-          <td>Remise</td>
-          <td>€0,00</td>
-        </tr>
+      <tr>
+        <td>Remise</td>
+        <td>€0,00</td>
+      </tr>
       {% endif %}
 
       <tr>
@@ -149,10 +155,11 @@
 
 
   {%comment%}
-    Infos complémentaires
+  Infos complémentaires
   {%endcomment%}
   <footer style="text-align: center">
-    <p class="separator">Votre satisfaction est notre priorité. Pour toutes questions, merci de contacter {{ shop.email }}</p>
+    <p class="separator">Votre satisfaction est notre priorité. Pour toutes questions, merci de contacter {{ shop.email
+      }}</p>
 
     <p>
       <span>{{ shop.address2 }}</span>
